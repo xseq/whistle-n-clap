@@ -9,7 +9,9 @@ import shutil
 
 os.system('clear')
 proj_path = os.path.abspath(os.getcwd())
-wav_src_path = '/media/xuan/XZ/Dataset/FSD50k/FSD50K.dev_audio/'
+
+# change the following to the source path name
+wav_src_path = '.../Dataset/FSD50k/FSD50K.dev_audio/'
 wav_dst_path = proj_path + '/data/wav/'
 
 with open(proj_path + '/csv/categories.csv', newline='') as csvfile:
@@ -29,3 +31,4 @@ for p in range(n_dev_data):
         shutil.copy(src_name, dst_name)
 
 print('The number of wav files copied: ' + str(n_wav_files))
+
