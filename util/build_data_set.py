@@ -1,5 +1,6 @@
-# copying a subset of FSD50k audio data from the dataset folder to a local folder
-# use conda environment spoken_numbers
+# Copying a subset of FSD50k audio data from the dataset folder to a local folder
+# Each category has its own folder
+# Use conda environment spoken_numbers
 
 import numpy as np
 import csv
@@ -14,7 +15,7 @@ proj_path = os.path.abspath(os.getcwd())
 MAX_WAV_FILE_SIZE = 500000
 
 # change the following to the source path name
-wav_src_path = '.../Dataset/FSD50k/FSD50K.dev_audio/'
+wav_src_path = '/media/xuan/XZ/Dataset/FSD50k/FSD50K.dev_audio/'
 wav_dst_path = proj_path + '/data/wav/'
 
 with open(proj_path + '/csv/categories.csv', newline='') as csvfile:
@@ -26,6 +27,12 @@ n_categories = len(categories)
 n_dev_data = len(dev_list)
 file_count = [0] * n_categories
 
+# creating folders
+for p in range(n_categories):
+    mk_folder_name = wav_dst_path + categories[p, 1]
+    os.mkdir(mk_folder_name)
+print('Folders created.')
+
 # moving files
 for p in range(1, n_dev_data):
     category_name = dev_list[p, 1]
@@ -35,7 +42,8 @@ for p in range(1, n_dev_data):
         for q in range(n_categories):
             if category_name == categories[q, 0]:
                 file_count[q] += 1
-                dst_name = wav_dst_path + str(dev_list[p, 0]) + '.wav'
+                dst_name = wav_dst_path + categories[q, 1] + \
+                    '/' + str(dev_list[p, 0]) + '.wav'
                 print('Copying file of category ' + 
                     categories[q, 1] + ': ' + str(dev_list[p, 0]) + '.wav')
                 shutil.copy(src_name, dst_name)
