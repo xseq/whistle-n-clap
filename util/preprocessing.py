@@ -1,10 +1,4 @@
-# Do the following to prepare array inputs for the neural network model
-# Shuffle wav files
-# Split to training and evaluation sets
-# Load wav files
-# Zero padding
-# Extract features
-# Saving to a large csv file
+
 
 import numpy as np
 import csv

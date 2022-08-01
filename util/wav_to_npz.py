@@ -11,14 +11,32 @@ import numpy as np
 import csv
 import os
 from playsound import playsound
+from scipy.io import wavfile
 
 
 # parameters
 N_TRAIN_FILES = 24  # per class
-N_EVAL_FILES = 6    # per class
+N_TEST_FILES = 6    # per class
+FS = 44100
 
-
-# os.system('clear')
+os.system('clear')
 proj_path = os.path.abspath(os.getcwd())
-wav_path = proj_path + '/data/wav/selected_wav'
+wav_path = proj_path + '/data/selected_wav/'
 npz_path = proj_path + '/data/npz/'
+
+with open(proj_path + '/csv/categories.csv', newline='') as csvfile:
+    categories = np.array(list(csv.reader(csvfile)))
+
+n_lables = len(categories)
+n_file_per_label = N_TRAIN_FILES + N_TEST_FILES
+
+for p in range(n_lables):
+    label_txt = categories[p, 1]
+    print('Processing label: ' + label_txt)
+    label_folder = wav_path + label_txt + '/'
+    wav_file_list = os.listdir(label_folder)
+    for q in range(n_file_per_label):
+        f_name = label_folder + wav_file_list[q]
+        _, data = wavfile.read(f_name)
+        print('processing' + f_name)
+

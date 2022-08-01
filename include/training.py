@@ -17,10 +17,10 @@ import logging
 import tensorflow as tf
 
 
-print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
+os.system('clear')
 logging.getLogger("tensorflow").setLevel(logging.ERROR)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-os.system('clear')
+print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 tf.random.set_seed(111)
 
 
