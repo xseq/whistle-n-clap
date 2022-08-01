@@ -1,10 +1,10 @@
-"Chink_and_clink,Glass",Chink and Clink
-"Clapping,Hands",Clapping Hands
-"Coin_(dropping),Domestic_sounds_and_home_sounds",Dropping Coins
-"Cough,Respiratory_sounds",Coughing
-"Drawer_open_or_close,Domestic_sounds_and_home_sounds",Opening Drawer
-"Finger_snapping,Hands",Snapping Fingers
-"Keys_jangling,Domestic_sounds_and_home_sounds",Jangling Keys
-"Knock,Door,Wood,Domestic_sounds_and_home_sounds",Knocking Doors
-"Laughter,Human_voice",Laughing
-Walk_and_footsteps,Walking
+"Chink_and_clink,Glass",Chink and Clink,0
+"Clapping,Hands",Clapping Hands,1
+"Coin_(dropping),Domestic_sounds_and_home_sounds",Dropping Coins,2
+"Cough,Respiratory_sounds",Coughing,3
+"Drawer_open_or_close,Domestic_sounds_and_home_sounds",Opening Drawer,4
+"Finger_snapping,Hands",Snapping Fingers,5
+"Keys_jangling,Domestic_sounds_and_home_sounds",Jangling Keys,6
+"Knock,Door,Wood,Domestic_sounds_and_home_sounds",Knocking Doors,7
+"Laughter,Human_voice",Laughing,8
+Walk_and_footsteps,Walking,9
