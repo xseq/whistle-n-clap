@@ -1,21 +1,15 @@
 # Exploratory Data Analysis
 
-# Do the following to prepare array inputs for the neural network model
-# Shuffle wav files
-# Split to training and evaluation sets
-# Load wav files
-# Zero padding
-# Extract features
-# Saving to a large csv file
+# Use this script to listen to 
 
+import numpy as np
 import csv
 import os
 from playsound import playsound
 
 
 # parameters
-N_TRAIN_FILES = 24  # per class
-N_EVAL_FILES = 6    # per class
+N_FILES_TO_PLAY = 38
 
 
 os.system('clear')
@@ -32,7 +26,7 @@ for p in range(n_categories):
     print('Processing label: ' + label)
     label_folder = wav_path + label
     wav_file_list = os.listdir(label_folder)
-    for q in range(38):
+    for q in range(N_FILES_TO_PLAY):
         wav_name = label_folder + '/' +  wav_file_list[q]
         print('Playing file #: ' + str(q) + '  ' +wav_file_list[q])
         playsound(wav_name)
