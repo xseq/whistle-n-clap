@@ -41,8 +41,30 @@ for p in range(n_categories):
     wav_file_list = os.listdir(label_folder)
     for q in range(N_TEST_FILES):
         f_name = label_folder + wav_file_list[q]
-        _, data = wavfile.read(f_name)
+        _, data = librosa.Load(f_name)
+        #_, data = wavfile.read(f_name)
         print('processing' + f_name)
+        x_test.append(get_features())
         y_test.append(categories[p, 2])   # a number that stands for the category
 
+
+# zero padding to the intended length
+def zero_padding(data_in, FS_in):
+    CLIP_DURATION = 3    # seconds
+    data_out = [0] * (CLIP_DURATION * FS_in)
+    n_copied_samples = min(len(data_in), len(data_out))  # throw away extra samples
+    data_out[:n_copied_samples] = data_in[:n_copied_samples]
+    return data_out
+
+
+# get audio features; using a wrapper of librosa for now
+def get_features(data_in, FS_in):
+    melspectrogram = librosa.feature.melspectrogram(
+        y=data_in,
+        sr=FS_in,
+        n_fft=2048,  # 46 ms
+        hop_length=1024,  # 23 ms
+        n_mels=128
+    )
+    return librosa.power_to_db(melspectrogram, ref=np.max)
 
