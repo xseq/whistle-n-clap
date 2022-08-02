@@ -9,11 +9,12 @@
 
 import numpy as np
 import librosa
-from preprocessing import get_features
 import csv
 import os
+from datetime import datetime
 from playsound import playsound
 from scipy.io import wavfile
+from preprocessing import get_features
 
 
 # parameters
@@ -45,18 +46,27 @@ for p in range(n_categories):
         f_name = label_folder + wav_file_list[q]
         _, data = wavfile.read(f_name)
         data = data.astype(np.float32, order='C') / 32768.0
-        print('processing' + f_name)
-        x_test.append(get_features(data, FS))
+        data = np.array(data)
+        features = get_features(data, FS)
+        print(features.shape)
+        x_test.append(features)
         y_test.append(categories[p, 2])   # a number that stands for the category
     for q in range(N_TEST_FILES, n_file_per_label):
         f_name = label_folder + wav_file_list[q]
         _, data = wavfile.read(f_name)
         data = data.astype(np.float32, order='C') / 32768.0
-        print('processing' + f_name)
-        x_train.append(get_features(data, FS))
+        data = np.array(data)
+        features = get_features(data, FS)
+        print(features.shape)
+        x_train.append(features)
         y_train.append(categories[p, 2])   # a number that stands for the category        
 
+
+# saving to npz file
+now = datetime.now()
+current_time = now.strftime("%Y%m%d_%H%M%S")
+npz_file_name = npz_path + 'data_' + current_time
+print(['Saving to npz file: ' + npz_file_name])
+np.savez(npz_file_name, x_train, y_train, x_test, y_test)
 print('Done.')
-
-
 

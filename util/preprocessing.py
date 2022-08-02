@@ -19,6 +19,8 @@ def zero_padding(data_in, FS_in):
 
 # get audio features; using a wrapper of librosa for now
 def get_features(data_in, FS_in):
+    data_in = zero_padding(data_in, FS_in)
+    data_in = np.array(data_in)
     melspectrogram = librosa.feature.melspectrogram(
         y=data_in,
         sr=FS_in,
@@ -28,4 +30,3 @@ def get_features(data_in, FS_in):
     )
     return librosa.power_to_db(melspectrogram, ref=np.max)
 
-    
