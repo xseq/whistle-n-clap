@@ -120,7 +120,7 @@ model.compile(optimizer='adam',
 # Step 5: Training
 model.fit(x_train, y_train, epochs=100,)
 # saving model and weights
-model_path = proj_path + '/include/model/'
+model_path = proj_path + '/models/'
 model_name = 'cnn_20220802.h5'
 model_full_name = model_path + model_name
 model.save(model_full_name)
