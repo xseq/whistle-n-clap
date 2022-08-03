@@ -49,7 +49,7 @@ for p in range(n_categories):
         data = np.array(data)
         features = get_features(data, FS)    # shape: (128, 130)
         x_test.append(features)
-        y_test.append(categories[p, 2])   # a number that stands for the category
+        y_test.append(int(categories[p, 2]))   # a number that stands for the category
     for q in range(N_TEST_FILES, n_file_per_label):
         f_name = label_folder + wav_file_list[q]
         _, data = wavfile.read(f_name)
@@ -57,7 +57,7 @@ for p in range(n_categories):
         data = np.array(data)
         features = get_features(data, FS)
         x_train.append(features)
-        y_train.append(categories[p, 2])   # a number that stands for the category        
+        y_train.append(int(categories[p, 2]))   # a number that stands for the category        
 
 
 # saving to npz file

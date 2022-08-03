@@ -28,7 +28,7 @@ tf.random.set_seed(111)
 # Step 0: Feature preprocessing, needed for audio but not for images
 proj_path = os.path.abspath(os.getcwd())
 npz_path = proj_path + '/data/npz/'
-npz_file_name = npz_path + 'data_20220801_2234.npz'
+npz_file_name = npz_path + 'data_20220802_2037.npz'
 data = np.load(npz_file_name)
 x_train = data['x_train']
 y_train = data['y_train']
@@ -37,8 +37,8 @@ y_test = data['y_test']
 
 # Step 1: Shapes of inputs and outputs
 # x_train, x_test = x_train / 255.0, x_test / 255.0
-input_shape = x_train.shape[1] * x_train.shape[2]  # row * column
-output_shape = 10    # 10
+input_shape = x_train.shape  # row * column
+output_shape = y_train.shape    # 10
 print("Input Shape: " + str(input_shape))
 print("Output Shape: " + str(output_shape))
 
@@ -51,6 +51,19 @@ model = tf.keras.models.Sequential([
         input_shape=(128, 130, 1),
         filters=32,
         kernel_size=(5, 5),
+        padding='same',
+        activation=tf.nn.relu),  # output size: [n_samples,28,28,32]
+
+    # maxpooling1
+    tf.keras.layers.MaxPool2D(
+        pool_size=(2, 2),
+        strides=2,
+        padding='same'),  # output size: [n_samples,14,14,32]
+
+    # conv2
+    tf.keras.layers.Conv2D(
+        filters=32,
+        kernel_size=(3, 3),
         padding='same',
         activation=tf.nn.relu),  # output size: [n_samples,28,28,32]
 
@@ -104,17 +117,13 @@ model.compile(optimizer='adam',
 
 
 # Step 5: Training
-model.fit(x_train, y_train, epochs=5)
+model.fit(x_train, y_train, epochs=200)
 
 
 # Step 6: Evaluation
+print('Start evaluation: ')
 model.evaluate(x_test,  y_test)
 
 
-# probability_model = tf.keras.Sequential([
-#     model,
-#     tf.keras.layers.Softmax()
-# ])
-# print(probability_model(x_test[:5]))
 
 
