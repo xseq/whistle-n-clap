@@ -22,7 +22,7 @@ os.system('clear')
 logging.getLogger("tensorflow").setLevel(logging.ERROR)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
-tf.random.set_seed(111)
+tf.random.set_seed(888)
 
 
 # Step 0: Feature preprocessing, needed for audio but not for images
@@ -104,6 +104,7 @@ model = tf.keras.models.Sequential([
 
 ])
 
+model.summary()
 
 # Step 3: Define a loss function
 loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
@@ -117,13 +118,22 @@ model.compile(optimizer='adam',
 
 
 # Step 5: Training
-model.fit(x_train, y_train, epochs=200)
+model.fit(x_train, y_train, epochs=100,)
+# saving model and weights
+model_path = proj_path + '/include/model/'
+model_name = 'cnn_20220802.h5'
+model_full_name = model_path + model_name
+model.save(model_full_name)
+print('model saved.')
+weight_name = 'cnn_weight_20220802'
+weight_full_name = model_path + weight_name
+model.save_weights(weight_full_name)
+print('weights saved.')
 
 
 # Step 6: Evaluation
 print('Start evaluation: ')
 model.evaluate(x_test,  y_test)
-
 
 
 
