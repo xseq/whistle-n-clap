@@ -42,7 +42,6 @@ output_shape = 10    # 10
 print("Input Shape: " + str(input_shape))
 print("Output Shape: " + str(output_shape))
 
-
 # Step 2: Modeling
 model = tf.keras.models.Sequential([    
 
@@ -105,7 +104,7 @@ model.compile(optimizer='adam',
 
 
 # Step 5: Training
-model.fit(x_train, y_train, epochs=50)
+model.fit(x_train, y_train, epochs=5)
 
 
 # Step 6: Evaluation
