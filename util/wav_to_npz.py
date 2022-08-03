@@ -47,8 +47,7 @@ for p in range(n_categories):
         _, data = wavfile.read(f_name)
         data = data.astype(np.float32, order='C') / 32768.0
         data = np.array(data)
-        features = get_features(data, FS)
-        print(features.shape)
+        features = get_features(data, FS)    # shape: (128, 130)
         x_test.append(features)
         y_test.append(categories[p, 2])   # a number that stands for the category
     for q in range(N_TEST_FILES, n_file_per_label):
@@ -57,16 +56,16 @@ for p in range(n_categories):
         data = data.astype(np.float32, order='C') / 32768.0
         data = np.array(data)
         features = get_features(data, FS)
-        print(features.shape)
         x_train.append(features)
         y_train.append(categories[p, 2])   # a number that stands for the category        
 
 
 # saving to npz file
 now = datetime.now()
-current_time = now.strftime("%Y%m%d_%H%M%S")
+current_time = now.strftime("%Y%m%d_%H%M")
 npz_file_name = npz_path + 'data_' + current_time
 print(['Saving to npz file: ' + npz_file_name])
-np.savez(npz_file_name, x_train, y_train, x_test, y_test)
+np.savez(npz_file_name, 
+    x_train=x_train, y_train=y_train, x_test=x_test, y_test=y_test)
 print('Done.')
 

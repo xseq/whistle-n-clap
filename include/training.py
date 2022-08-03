@@ -12,6 +12,7 @@
 # notes for tf 2.8 https://www.tensorflow.org/tutorials/quickstart/beginner
 
 
+import numpy as np
 import os
 import logging
 import tensorflow as tf
@@ -25,14 +26,19 @@ tf.random.set_seed(111)
 
 
 # Step 0: Feature preprocessing, needed for audio but not for images
-mnist = tf.keras.datasets.mnist
-
+proj_path = os.path.abspath(os.getcwd())
+npz_path = proj_path + '/data/npz/'
+npz_file_name = npz_path + 'data_20220801_2234.npz'
+data = np.load(npz_file_name)
+x_train = data['x_train']
+y_train = data['y_train']
+x_test = data['x_test']
+y_test = data['y_test']
 
 # Step 1: Shapes of inputs and outputs
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
-x_train, x_test = x_train / 255.0, x_test / 255.0
+# x_train, x_test = x_train / 255.0, x_test / 255.0
 input_shape = x_train.shape[1] * x_train.shape[2]  # row * column
-output_shape = y_test.max() - y_train.min() + 1    # 10
+output_shape = 10    # 10
 print("Input Shape: " + str(input_shape))
 print("Output Shape: " + str(output_shape))
 
@@ -43,7 +49,7 @@ model = tf.keras.models.Sequential([
     # conv1
     tf.keras.layers.Conv2D(
         data_format='channels_last',
-        input_shape=(28, 28, 1),
+        input_shape=(128, 130, 1),
         filters=32,
         kernel_size=(5, 5),
         padding='same',
