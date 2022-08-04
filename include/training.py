@@ -135,5 +135,3 @@ print('weights saved.')
 print('Start evaluation: ')
 model.evaluate(x_test,  y_test)
 
-
-
