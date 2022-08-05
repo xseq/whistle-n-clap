@@ -30,14 +30,12 @@ CLIP_DURATION = 3   # seconds
 MAX_DURATION = 60   # seconds
 
 
-# # load model
-# proj_path = os.path.abspath(os.getcwd())
-# f_name = proj_path + '/models/cnn_20220802.h5'
-# model = load_model(f_name)
-# model.summary()
-# # weight_file = proj_path + '/models/cnn_weight_20220802.data-00000-of-00001'
-# # cnn_weights = cnn_model.load_weights(weight_file)
-# print('Model Loaded!')
+# load model
+proj_path = os.path.abspath(os.getcwd())
+f_name = proj_path + '/models/cnn_20220802.h5'
+model = load_model(f_name)
+model.summary()
+print('Model Loaded!')
 
 
 audio_obj = pyaudio.PyAudio()  # portaudio interface
@@ -47,6 +45,7 @@ stream = audio_obj.open(format=sample_format,
                 channels=1,
                 rate=FS,
                 frames_per_buffer=frame_size,
+                input_device_index=2,
                 input=True)
 
 
@@ -58,15 +57,13 @@ plt.figure(1)
 # Store data in chunks for 3 seconds
 for p in range(0, int(FS / frame_size * MAX_DURATION)):
     frame_data = np.frombuffer(stream.read(frame_size),dtype=np.float32)
-    # frame_data = frame_data.astype(np.float32, order='C') / 32768.0
+    # frame = np.array(stream.read(frame_size))
+    # frame_data = frame.astype(np.float32, order='C') / 32768.0
     buffer = np.append(buffer[len(frame_data):], frame_data)
-    # features = get_features(buffer, FS)
-    # y_pred = model.predict(features)
-    # print('Prediction: '  + str(y_pred))
+    features = get_features(buffer, FS)
+    y_pred = model.predict(features)
+    print('Prediction: '  + str(y_pred))
 
-    plt.title("Signal Wave...")
-    plt.plot(frame_data)
-    plt.show()
 
 
 # Stop and close the stream 
