@@ -7,6 +7,8 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 import matplotlib.pyplot as plt
 import sys
+import sounddevice as sd
+
 
 proj_path = os.path.abspath(os.getcwd())
 util_path = proj_path + '/util/'
@@ -18,6 +20,11 @@ from preprocessing import get_features
 os.system('clear')
 logging.getLogger("tensorflow").setLevel(logging.ERROR)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
+
+
+sd.query_devices()
+
 
 frame_size = 1024
 sample_format = pyaudio.paInt16
