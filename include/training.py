@@ -133,5 +133,5 @@ print('model and weights saved.')
 
 # Step 6: Evaluation
 print('Start evaluation: ')
-model.evaluate(x_test,  y_test)
+model.evaluate(x_test, y_test)
 

@@ -36,50 +36,50 @@ frame_size = 512
 sample_format = pyaudio.paInt16
 n_channels = 1
 FS = 44100
-FILE_NAME = "temp.wav"
+FILE_NAME = "28225.wav"
 CLIP_DURATION = 3   # seconds
 
 
-audio_obj = pyaudio.PyAudio()  # portaudio interface
-print('Recording')
+# audio_obj = pyaudio.PyAudio()  # portaudio interface
+# print('Recording')
 
-stream = audio_obj.open(format=sample_format,
-                channels=n_channels,
-                rate=FS,
-                frames_per_buffer=frame_size,
-                input_device_index=device_idx,
-                input=True)
-
-
-record_frames = []
-stream.start_stream()
-for p in range(0, int(FS / frame_size * CLIP_DURATION)):
-    data = stream.read(frame_size)
-    record_frames.append(data)
+# stream = audio_obj.open(format=sample_format,
+#                 channels=n_channels,
+#                 rate=FS,
+#                 frames_per_buffer=frame_size,
+#                 input_device_index=device_idx,
+#                 input=True)
 
 
-# Stop and close the stream 
-stream.stop_stream()
-stream.close()
-# Terminate the PortAudio interface
-audio_obj.terminate()
+# record_frames = []
+# stream.start_stream()
+# for p in range(0, int(FS / frame_size * CLIP_DURATION)):
+#     data = stream.read(frame_size)
+#     record_frames.append(data)
 
 
-# Save the recorded data as a WAV file
-wf = wave.open(FILE_NAME, 'wb')
-wf.setnchannels(n_channels)
-wf.setsampwidth(audio_obj.get_sample_size(sample_format))
-wf.setframerate(FS)
-wf.writeframes(b''.join(record_frames))
-wf.close()
-print('Finished recording')
+# # Stop and close the stream 
+# stream.stop_stream()
+# stream.close()
+# # Terminate the PortAudio interface
+# audio_obj.terminate()
+
+
+# # Save the recorded data as a WAV file
+# wf = wave.open(FILE_NAME, 'wb')
+# wf.setnchannels(n_channels)
+# wf.setsampwidth(audio_obj.get_sample_size(sample_format))
+# wf.setframerate(FS)
+# wf.writeframes(b''.join(record_frames))
+# wf.close()
+# print('Finished recording')
 
 
 # load model
 proj_path = os.path.abspath(os.getcwd())
 f_name = proj_path + '/models/cnn_20220802.h5'
 model = load_model(f_name)
-model.summary()
+# model.summary()
 print('Model Loaded!')
 
 
@@ -87,7 +87,10 @@ _, data = wavfile.read(FILE_NAME)
 data = data.astype(np.float32, order='C') / 32768.0
 data = np.array(data)
 features = get_features(data, FS)    # shape: (128, 130)
-y_pred = model.predict(features)
+model_input = np.expand_dims(features, 0)
+print('input shape: ')
+print(model_input.shape)
+y_pred = model.predict(model_input)
 print('Prediction: '  + str(y_pred))
 
 
