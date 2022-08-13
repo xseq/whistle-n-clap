@@ -21,9 +21,14 @@ os.system('clear')
 logging.getLogger("tensorflow").setLevel(logging.ERROR)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-
-
-sd.query_devices()
+# load the target input device
+device_list = sd.query_devices()
+device_name = 'Sennheiser'
+device_idx = []
+for p in range(len(device_list)):
+    if device_name in device_list[p]['name']:
+        device_idx = p
+print(device_idx)
 
 
 frame_size = 1024
