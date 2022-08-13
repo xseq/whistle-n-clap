@@ -5,6 +5,7 @@ import pyaudio
 import wave
 import numpy as np
 import os
+import csv
 import logging
 import tensorflow as tf
 from tensorflow.keras.models import load_model
@@ -24,6 +25,12 @@ os.system('clear')
 logging.getLogger("tensorflow").setLevel(logging.ERROR)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
+proj_path = os.path.abspath(os.getcwd())
+with open(proj_path + '/csv/categories.csv', newline='') as csvfile:
+    categories = np.array(list(csv.reader(csvfile)))
+
+n_categories = len(categories)
+
 # load the target input device
 device_list = sd.query_devices()
 device_name = 'Sennheiser'
@@ -36,43 +43,43 @@ frame_size = 512
 sample_format = pyaudio.paInt16
 n_channels = 1
 FS = 44100
-FILE_NAME = "28225.wav"
+FILE_NAME = "temp.wav"
 CLIP_DURATION = 3   # seconds
 
 
-# audio_obj = pyaudio.PyAudio()  # portaudio interface
-# print('Recording')
+audio_obj = pyaudio.PyAudio()  # portaudio interface
+print('Recording')
 
-# stream = audio_obj.open(format=sample_format,
-#                 channels=n_channels,
-#                 rate=FS,
-#                 frames_per_buffer=frame_size,
-#                 input_device_index=device_idx,
-#                 input=True)
-
-
-# record_frames = []
-# stream.start_stream()
-# for p in range(0, int(FS / frame_size * CLIP_DURATION)):
-#     data = stream.read(frame_size)
-#     record_frames.append(data)
+stream = audio_obj.open(format=sample_format,
+                channels=n_channels,
+                rate=FS,
+                frames_per_buffer=frame_size,
+                input_device_index=device_idx,
+                input=True)
 
 
-# # Stop and close the stream 
-# stream.stop_stream()
-# stream.close()
-# # Terminate the PortAudio interface
-# audio_obj.terminate()
+record_frames = []
+stream.start_stream()
+for p in range(0, int(FS / frame_size * CLIP_DURATION)):
+    data = stream.read(frame_size)
+    record_frames.append(data)
 
 
-# # Save the recorded data as a WAV file
-# wf = wave.open(FILE_NAME, 'wb')
-# wf.setnchannels(n_channels)
-# wf.setsampwidth(audio_obj.get_sample_size(sample_format))
-# wf.setframerate(FS)
-# wf.writeframes(b''.join(record_frames))
-# wf.close()
-# print('Finished recording')
+# Stop and close the stream 
+stream.stop_stream()
+stream.close()
+# Terminate the PortAudio interface
+audio_obj.terminate()
+
+
+# Save the recorded data as a WAV file
+wf = wave.open(FILE_NAME, 'wb')
+wf.setnchannels(n_channels)
+wf.setsampwidth(audio_obj.get_sample_size(sample_format))
+wf.setframerate(FS)
+wf.writeframes(b''.join(record_frames))
+wf.close()
+print('Finished recording')
 
 
 # load model
@@ -91,6 +98,15 @@ model_input = np.expand_dims(features, 0)
 print('input shape: ')
 print(model_input.shape)
 y_pred = model.predict(model_input)
-print('Prediction: '  + str(y_pred))
+# print('Prediction: '  + str(y_pred))
+y_pred = np.squeeze(y_pred)
 
+THRD = 2
+y_max = y_pred.max()
+if y_max > THRD:
+    event_idx = np.argmax(y_pred)
+    event = categories[event_idx, 1]
+    print('Event detected: ' + event)
+else:
+    print('No event detected.')
 
