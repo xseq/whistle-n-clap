@@ -1,4 +1,5 @@
 # record audio for a limited period of time
+# reference: https://stackoverflow.com/questions/40704026/voice-recording-using-pyaudio
 
 import pyaudio
 import wave
@@ -10,7 +11,6 @@ from tensorflow.keras.models import load_model
 import matplotlib.pyplot as plt
 import sys
 import sounddevice as sd
-
 
 proj_path = os.path.abspath(os.getcwd())
 util_path = proj_path + '/util/'
@@ -31,8 +31,7 @@ for p in range(len(device_list)):
     if device_name in device_list[p]['name']:
         device_idx = p
 
-
-frame_size = 256
+frame_size = 512
 sample_format = pyaudio.paInt16
 n_channels = 1
 FS = 44100

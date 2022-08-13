@@ -1,88 +1,93 @@
+# record audio for a limited period of time
+# reference: https://stackoverflow.com/questions/40704026/voice-recording-using-pyaudio
+
 import pyaudio
 import wave
+import numpy as np
+import os
+import logging
+import tensorflow as tf
+from tensorflow.keras.models import load_model
+import matplotlib.pyplot as plt
+from scipy.io import wavfile
+import sys
+import sounddevice as sd
 
-CHUNK = 1024
-FORMAT = pyaudio.paInt16
-CHANNELS = 2
-RATE = 44100
-RECORD_SECONDS = 5
-WAVE_OUTPUT_FILENAME = "voice.wav"
+proj_path = os.path.abspath(os.getcwd())
+util_path = proj_path + '/util/'
+sys.path.insert(0, util_path)
 
-p = pyaudio.PyAudio()
+from preprocessing import get_features
 
-stream = p.open(format=FORMAT,
-                channels=CHANNELS,
-                rate=RATE,
-                input=True,
-                frames_per_buffer=CHUNK)
 
-print("* recording")
+os.system('clear')
+logging.getLogger("tensorflow").setLevel(logging.ERROR)
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-frames = []
-plt.figure(1)
-for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
-    data = stream.read(CHUNK)
-    buffer = np.frombuffer(stream.read(frame_size),dtype=np.float32)
-    # frames.append(data)
-    
+# load the target input device
+device_list = sd.query_devices()
+device_name = 'Sennheiser'
+device_idx = []
+for p in range(len(device_list)):
+    if device_name in device_list[p]['name']:
+        device_idx = p
 
-print("* done recording")
+frame_size = 512
+sample_format = pyaudio.paInt16
+n_channels = 1
+FS = 44100
+FILE_NAME = "temp.wav"
+CLIP_DURATION = 3   # seconds
 
+
+audio_obj = pyaudio.PyAudio()  # portaudio interface
+print('Recording')
+
+stream = audio_obj.open(format=sample_format,
+                channels=n_channels,
+                rate=FS,
+                frames_per_buffer=frame_size,
+                input_device_index=device_idx,
+                input=True)
+
+
+record_frames = []
+stream.start_stream()
+for p in range(0, int(FS / frame_size * CLIP_DURATION)):
+    data = stream.read(frame_size)
+    record_frames.append(data)
+
+
+# Stop and close the stream 
 stream.stop_stream()
 stream.close()
-p.terminate()
-
-# wf = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
-# wf.setnchannels(CHANNELS)
-# wf.setsampwidth(p.get_sample_size(FORMAT))
-# wf.setframerate(RATE)
-# wf.writeframes(b''.join(frames))
-# wf.close()
+# Terminate the PortAudio interface
+audio_obj.terminate()
 
 
-# import numpy as np
-# import pyaudio
-# from matplotlib import pyplot as plt
-# from matplotlib.animation import FuncAnimation
-# plt.style.use('bmh')
+# Save the recorded data as a WAV file
+wf = wave.open(FILE_NAME, 'wb')
+wf.setnchannels(n_channels)
+wf.setsampwidth(audio_obj.get_sample_size(sample_format))
+wf.setframerate(FS)
+wf.writeframes(b''.join(record_frames))
+wf.close()
+print('Finished recording')
 
-# SAMPLESIZE = 4096 # number of data points to read at a time
-# SAMPLERATE = 44100 # time resolution of the recording device (Hz)
 
-# p = pyaudio.PyAudio() # instantiate PyAudio
+# load model
+proj_path = os.path.abspath(os.getcwd())
+f_name = proj_path + '/models/cnn_20220802.h5'
+model = load_model(f_name)
+model.summary()
+print('Model Loaded!')
 
-# # info = p.get_host_api_info_by_index(0)
-# # numdevices = info.get('deviceCount')
 
-# # for i in range(0, numdevices):
-# #     if (p.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels')) > 0:
-# #         print("Input Device id ", i, " - ", p.get_device_info_by_host_api_device_index(0, i).get('name'))
+_, data = wavfile.read(FILE_NAME)
+data = data.astype(np.float32, order='C') / 32768.0
+data = np.array(data)
+features = get_features(data, FS)    # shape: (128, 130)
+y_pred = model.predict(features)
+print('Prediction: '  + str(y_pred))
 
-# stream=p.open(format=pyaudio.paInt16,channels=1,rate=SAMPLERATE,input=True,input_device_index=2,
-#                frames_per_buffer=SAMPLESIZE) # use default input device to open audio stream
 
-# # set up plotting
-# fig = plt.figure()
-# ax = plt.axes(xlim=(0, SAMPLESIZE-1), ylim=(-9999, 9999))
-# line, = ax.plot([], [], lw=1)
-
-# # x axis data points
-# x = np.linspace(0, SAMPLESIZE-1, SAMPLESIZE)
-
-# # methods for animation
-# def init():
-#     line.set_data([], [])
-#     return line,
-# def animate(i):
-#     y = np.frombuffer(stream.read(SAMPLESIZE), dtype=np.int16)
-#     line.set_data(x, y)
-#     return line,
-
-# FuncAnimation(fig, animate, init_func=init, frames=200, interval=20, blit=True)
-
-# plt.show()
-
-# # stop and close the audio stream
-# stream.stop_stream()
-# stream.close()
-# p.terminate()
