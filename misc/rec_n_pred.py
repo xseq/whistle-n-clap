@@ -1,5 +1,4 @@
-# record audio for a limited period of time
-# reference: https://stackoverflow.com/questions/40704026/voice-recording-using-pyaudio
+# record audio and predict the category
 
 import pyaudio
 import wave
