@@ -1,25 +1,24 @@
-# record audio and predict the category without recording audio
+# record 3s audio and predict the category without saving audio
 
-import pyaudio
-import wave
-import numpy as np
-import os
-import csv
-import logging
-import tensorflow as tf
-from tensorflow.keras.models import load_model
-import matplotlib.pyplot as plt
-from scipy.io import wavfile
 import sys
-import struct
-import sounddevice as sd
+import os
 
 proj_path = os.path.abspath(os.getcwd())
 util_path = proj_path + '/util/'
 sys.path.insert(0, util_path)
 
 from preprocessing import get_features
-
+import pyaudio
+import wave
+import numpy as np
+import csv
+import logging
+import tensorflow as tf
+from tensorflow.keras.models import load_model
+import matplotlib.pyplot as plt
+from scipy.io import wavfile
+import struct
+import sounddevice as sd
 
 os.system('clear')
 logging.getLogger("tensorflow").setLevel(logging.ERROR)
