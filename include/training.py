@@ -12,10 +12,17 @@
 # notes for tf 2.8 https://www.tensorflow.org/tutorials/quickstart/beginner
 
 
-import numpy as np
+import sys
 import os
+
+proj_path = os.path.abspath(os.getcwd())
+util_path = proj_path + '/util/'
+sys.path.insert(0, util_path)
+
+import numpy as np
 import logging
 import tensorflow as tf
+from time_to_text import time_to_text
 
 
 os.system('clear')
@@ -119,11 +126,10 @@ model.compile(optimizer='adam',
 # Step 5: Training
 model.fit(x_train, y_train, epochs=100,)
 # saving both model and weights
-model_path = proj_path + '/models/'
-model_name = 'cnn_20220802.h5'
-model_full_name = model_path + model_name
-model.save(model_full_name)
-print('model and weights saved.')
+model_name = proj_path + '/models/model_' + time_to_text() + '.h5'
+print(['Saving to model file: ' + model_name])
+model.save(model_name)
+print('Model and weights saved.')
 
 
 # Step 6: Evaluation

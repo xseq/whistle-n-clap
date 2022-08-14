@@ -92,7 +92,8 @@ print('Model Loaded!')
 _, data = wavfile.read(FILE_NAME)
 data = data.astype(np.float32, order='C') / 32768.0
 data = np.array(data)
-features = get_features(data, FS)    # shape: (128, 130)
+features = get_features(data, FS)    # shape: (128, the model
+# 6) Check the results 130)
 model_input = np.expand_dims(features, 0)
 print('input shape: ')
 print(model_input.shape)

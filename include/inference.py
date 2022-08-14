@@ -1,4 +1,4 @@
-# record 3s audio and predict the category without saving audio
+# Real time sound event detection
 
 import sys
 import os

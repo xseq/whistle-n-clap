@@ -3,7 +3,7 @@ This is a sound event detection (SED) demo for sounds that you can make around y
 
 
 === Usage ===
-'realtime.py' is the main entrance. It loads a trained model, streams audio and do an inference every half second.
+'inference.py' is the main entrance. It loads a trained model, streams audio and do an inference every half second.
 'training.py' trains (and retrains) the SED model. Use '/util/wav_to_npz.py' to generate local numpy array first.
 
 
