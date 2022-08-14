@@ -20,6 +20,7 @@ from scipy.io import wavfile
 import struct
 import sounddevice as sd
 
+
 os.system('clear')
 logging.getLogger("tensorflow").setLevel(logging.ERROR)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -77,9 +78,17 @@ clip = np.array(clip)
 clip = clip.astype(np.float32, order='C')
 
 
+# plotting
+plt.ion()
+plt.figure(1)
+plt.show()
+plt.title("Time domain")
+
+
 # audio streaming and recording
 stream.start_stream()
 for p in range(0, int(FS / FRAME_SIZE * MAX_DURATION)):
+    # reading audio buffer and formatting data
     data = stream.read(FRAME_SIZE, 
             exception_on_overflow = False) # ignore overflow
     count = len(data)/2
@@ -88,7 +97,18 @@ for p in range(0, int(FS / FRAME_SIZE * MAX_DURATION)):
     frame_data = np.array(frame_data)
     frame_float = frame_data.astype(np.float32, order='C') / 32768.0
 
+    # circular buffer
+    # TODO: improve efficiency
     clip = np.append(clip[len(frame_data):], frame_float)
+
+    # plotting
+    plt.clf()
+    plt.axis([0, FS * CLIP_DURATION, -0.3, 0.3])
+    plt.plot(clip)
+    plt.draw()
+    plt.pause(0.001)
+
+    # preprocessing
     features = get_features(clip, FS)
     model_input = np.expand_dims(features, 0)
 
