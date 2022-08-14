@@ -65,13 +65,13 @@ model = tf.keras.models.Sequential([
         filters=32,
         kernel_size=(3, 3),
         padding='same',
-        activation=tf.nn.relu),  # output size: [n_samples,28,28,32]
+        activation=tf.nn.relu),  # output size: 
 
     # maxpooling1
     tf.keras.layers.MaxPool2D(
         pool_size=(2, 2),
         strides=2,
-        padding='same'),  # output size: [n_samples,14,14,32]
+        padding='same'),  # output size: 
 
     # fc1
     tf.keras.layers.Flatten(),
@@ -108,7 +108,6 @@ model.summary()
 
 # Step 3: Define a loss function
 loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-# loss_fn = tf.keras.losses.CategoricalCrossentropy(from_logits=True)
 
 
 # Step 4: Optimization method
@@ -125,10 +124,6 @@ model_name = 'cnn_20220802.h5'
 model_full_name = model_path + model_name
 model.save(model_full_name)
 print('model and weights saved.')
-# weight_name = 'cnn_weight_20220802'
-# weight_full_name = model_path + weight_name
-# model.save_weights(weight_full_name)
-# print('weights saved.')
 
 
 # Step 6: Evaluation
