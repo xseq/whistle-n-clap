@@ -26,13 +26,13 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 
 # parameters
-FRAME_SIZE = 32768    # samples
+FRAME_SIZE = 32768    # samples, 32768 does not cause severe overflow
 sample_format = pyaudio.paInt16
 N_CHANNELS = 1
 FS = 44100
 CLIP_DURATION = 3   # seconds
 CONFIDENCE_THRD = 5
-MAX_DURATION = 30   # seconds
+MAX_DURATION = 60   # seconds
 
 
 # sound event categories
@@ -40,6 +40,12 @@ proj_path = os.path.abspath(os.getcwd())
 with open(proj_path + '/csv/categories.csv', newline='') as csvfile:
     categories = np.array(list(csv.reader(csvfile)))
 n_categories = len(categories)
+
+
+# display introduction
+print('Make the following sounds close to the microphone, and they would be detected:')
+print(categories[:, 1])
+print(' ')
 
 
 # load model
@@ -74,7 +80,8 @@ clip = clip.astype(np.float32, order='C')
 # audio streaming and recording
 stream.start_stream()
 for p in range(0, int(FS / FRAME_SIZE * MAX_DURATION)):
-    data = stream.read(FRAME_SIZE)
+    data = stream.read(FRAME_SIZE, 
+            exception_on_overflow = False) # ignore overflow
     count = len(data)/2
     format = "%dh"%(count)
     frame_data = struct.unpack(format, data)
@@ -83,8 +90,8 @@ for p in range(0, int(FS / FRAME_SIZE * MAX_DURATION)):
 
     clip = np.append(clip[len(frame_data):], frame_float)
     features = get_features(clip, FS)
-
     model_input = np.expand_dims(features, 0)
+
     # inference
     y_pred = model.predict(model_input)
     y_pred = np.squeeze(y_pred)
