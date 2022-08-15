@@ -50,10 +50,8 @@ I encountered the following problems during the development:
 
 * [plotting] subplot. see https://matplotlib.org/stable/gallery/subplots_axes_and_figures/subplots_demo.html and https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplot.html
 
-* [plotting] hold the figure and replot. Solution: see https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html
+* [plotting] hold the figure and replot. Solution: see https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html and https://stackoverflow.com/questions/28269157/plotting-in-a-non-blocking-way-with-matplotlib
 
 * [plotting] clearing current plot (so as to create video-like plotting). Solution: see https://stackoverflow.com/questions/47282918/clearing-a-subplot-in-matplotlib
 
-* [plotting] 
 
-* [plotting] 
