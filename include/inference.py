@@ -7,7 +7,7 @@ proj_path = os.path.abspath(os.getcwd())
 util_path = proj_path + '/util/'
 sys.path.insert(0, util_path)
 
-from preprocessing import get_features
+from preprocessing import get_features # pylint: disable=import-error
 import pyaudio
 import wave
 import numpy as np
@@ -15,7 +15,7 @@ import csv
 import struct
 import logging
 import tensorflow as tf
-from tensorflow.keras.models import load_model
+from tensorflow.keras.models import load_model  # pylint: disable=no-name-in-module, disable=import-error
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
 from scipy.io import wavfile
@@ -45,7 +45,7 @@ n_categories = len(categories)
 
 
 # display introduction
-print('Make the following sounds and they would be detected:')
+print('Make the following sounds and they would be detected:\n')
 for p in range(n_categories):
     print(categories[p, 1])
 print('\n\n')
@@ -68,7 +68,7 @@ for p in range(len(device_list)):
 
 # initialize recorder
 audio_obj = pyaudio.PyAudio()  # portaudio interface
-print('Sound event dtection started.\n')
+print('Sound event detection started.\n')
 stream = audio_obj.open(format=sample_format,
                 channels=N_CHANNELS,
                 rate=FS,
