@@ -47,3 +47,13 @@ I encountered the following problems during the development:
 * [audio streaming] Circular buffer; using a circular buffer would save processing time and improve efficiency; not fixed for now. Solution: queue and dqueue https://stackoverflow.com/questions/4151320/efficient-circular-buffer
 
 * [audio streaming] Buffer data type in pyaudio; each buffer frame comes as a string; has a lot of difficulty transforming it to float numbers. Solution: PyAudio is giving you binary-encoded audio frames as bytes in a string.  unpack it with struct, see https://stackoverflow.com/questions/36413567/pyaudio-convert-stream-read-into-int-to-get-amplitude and https://stackoverflow.com/questions/19629496/get-an-audio-sample-as-float-number-from-pyaudio-stream
+
+* [plotting] subplot. see https://matplotlib.org/stable/gallery/subplots_axes_and_figures/subplots_demo.html and https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplot.html
+
+* [plotting] hold the figure and replot. Solution: see https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html
+
+* [plotting] clearing current plot (so as to create video-like plotting). Solution: see https://stackoverflow.com/questions/47282918/clearing-a-subplot-in-matplotlib
+
+* [plotting] 
+
+* [plotting] 

@@ -34,7 +34,7 @@ N_CHANNELS = 1
 FS = 44100
 CLIP_DURATION = 3   # seconds
 CONFIDENCE_THRD = 5
-MAX_DURATION = 60   # seconds
+MAX_DURATION = 120   # seconds
 
 
 # sound event categories
@@ -45,9 +45,10 @@ n_categories = len(categories)
 
 
 # display introduction
-print('Make the following sounds close to the microphone, and they would be detected:')
-print(categories[:, 1])
-print(' ')
+print('Make the following sounds and they would be detected:')
+for p in range(n_categories):
+    print(categories[p, 1])
+print('\n\n')
 
 
 # load model
@@ -67,7 +68,7 @@ for p in range(len(device_list)):
 
 # initialize recorder
 audio_obj = pyaudio.PyAudio()  # portaudio interface
-print('Started.')
+print('Sound event dtection started.\n')
 stream = audio_obj.open(format=sample_format,
                 channels=N_CHANNELS,
                 rate=FS,
@@ -132,6 +133,6 @@ for p in range(0, int(FS / FRAME_SIZE * MAX_DURATION)):
 stream.stop_stream()
 stream.close()
 audio_obj.terminate()
-print('Finished.')
+print('Sound event dtection finished and stopped.\n\n')
 
 
