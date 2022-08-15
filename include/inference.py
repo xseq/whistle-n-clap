@@ -12,21 +12,20 @@ import pyaudio
 import wave
 import numpy as np
 import csv
+import struct
 import logging
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 import matplotlib.pyplot as plt
+from matplotlib.pyplot import figure
 from scipy.io import wavfile
-import struct
 import sounddevice as sd
 import librosa.display
-from matplotlib.pyplot import figure
 
 
 os.system('clear')
 logging.getLogger("tensorflow").setLevel(logging.ERROR)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-
 
 # parameters
 FRAME_SIZE = 32768    # samples, 32768 does not cause severe overflow
@@ -68,7 +67,7 @@ for p in range(len(device_list)):
 
 # initialize recorder
 audio_obj = pyaudio.PyAudio()  # portaudio interface
-print('Recording')
+print('Started.')
 stream = audio_obj.open(format=sample_format,
                 channels=N_CHANNELS,
                 rate=FS,
@@ -80,14 +79,12 @@ clip = np.array(clip)
 clip = clip.astype(np.float32, order='C')
 
 
-# plotting
-
+# initializing plotting
 plt.ion()
 fig, (ax1, ax2) = plt.subplots(2)
 fig = plt.gcf()
-fig.set_size_inches(5, 11, forward=True)
+fig.set_size_inches(5, 11, forward=True)  # inches
 plt.show()
-# plt.title("Time domain")
 
 
 # audio streaming and recording
@@ -126,15 +123,15 @@ for p in range(0, int(FS / FRAME_SIZE * MAX_DURATION)):
     if y_max > CONFIDENCE_THRD:
         event_idx = np.argmax(y_pred)
         event = categories[event_idx, 1]
-        fig.suptitle('Event detected: ' + event)
+        fig.suptitle('Event detected: ' + event, fontsize=20)
     else:
-        fig.suptitle('No event detected.')
+        fig.suptitle('No event detected.', fontsize=20)
 
 
 # stop and close the stream 
 stream.stop_stream()
 stream.close()
 audio_obj.terminate()
-print('Finished recording')
+print('Finished.')
 
 
