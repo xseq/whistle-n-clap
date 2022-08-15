@@ -19,6 +19,8 @@ import matplotlib.pyplot as plt
 from scipy.io import wavfile
 import struct
 import sounddevice as sd
+import librosa.display
+from matplotlib.pyplot import figure
 
 
 os.system('clear')
@@ -79,10 +81,13 @@ clip = clip.astype(np.float32, order='C')
 
 
 # plotting
+
 plt.ion()
-plt.figure(1)
+fig, (ax1, ax2) = plt.subplots(2)
+fig = plt.gcf()
+fig.set_size_inches(5, 11, forward=True)
 plt.show()
-plt.title("Time domain")
+# plt.title("Time domain")
 
 
 # audio streaming and recording
@@ -101,16 +106,18 @@ for p in range(0, int(FS / FRAME_SIZE * MAX_DURATION)):
     # TODO: improve efficiency
     clip = np.append(clip[len(frame_data):], frame_float)
 
-    # plotting
-    plt.clf()
-    plt.axis([0, FS * CLIP_DURATION, -0.3, 0.3])
-    plt.plot(clip)
-    plt.draw()
-    plt.pause(0.001)
-
     # preprocessing
     features = get_features(clip, FS)
     model_input = np.expand_dims(features, 0)
+
+    # plotting
+    ax1.clear() 
+    ax1.axis([0, FS * CLIP_DURATION, -0.3, 0.3])
+    ax1.plot(clip)
+    ax2.clear() 
+    flip_features = np.flip(features, axis=0)
+    plt.imshow(flip_features)
+    plt.pause(0.001)
 
     # inference
     y_pred = model.predict(model_input)
@@ -119,9 +126,9 @@ for p in range(0, int(FS / FRAME_SIZE * MAX_DURATION)):
     if y_max > CONFIDENCE_THRD:
         event_idx = np.argmax(y_pred)
         event = categories[event_idx, 1]
-        print('Event detected: ' + event)
+        fig.suptitle('Event detected: ' + event)
     else:
-        print('No event detected.')
+        fig.suptitle('No event detected.')
 
 
 # stop and close the stream 
