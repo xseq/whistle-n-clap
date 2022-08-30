@@ -14,6 +14,10 @@ https://annotator.freesound.org/fsd/release/FSD50K/
 Note: I started the project with the name "whistle-n-clap" without realizing that the data set does not contain whistling sounds. So sorry, no whistling can be detected.
 
 
+=== Model ===
+This is a simple realization of CNN based on this article: https://zhuanlan.zhihu.com/p/52298361
+
+
 === Reference ===
 >Eduardo Fonseca, Xavier Favory, Jordi Pons, Frederic Font, Xavier Serra. "FSD50K: an Open Dataset of Human-Labeled Sound Events", arXiv 2020.
 Purwins, H., Li, B., Virtanen, T., Schlüter, J., Chang, S. Y., & Sainath, T. (2019). Deep learning for audio signal processing. IEEE Journal of Selected Topics in Signal Processing, 13(2), 206-219.
